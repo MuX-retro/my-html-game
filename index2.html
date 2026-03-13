@@ -1,0 +1,708 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+    <title>EliteIMG — премиум хостинг изображений</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(145deg, #f0f5fa 0%, #e6edf4 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .glass-card {
+            max-width: 1200px;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.75);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border-radius: 48px;
+            box-shadow: 0 30px 60px rgba(0, 20, 30, 0.2), 0 10px 20px rgba(0, 0, 0, 0.05);
+            padding: 40px;
+            border: 1px solid rgba(255, 255, 255, 0.6);
+            transition: all 0.3s;
+        }
+
+        h1 {
+            font-size: 4rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #1a2a3a, #2c3e50);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: -1px;
+            margin-bottom: 8px;
+            line-height: 1.1;
+        }
+
+        .subhead {
+            color: #3a4e62;
+            font-size: 1.3rem;
+            font-weight: 400;
+            margin-bottom: 40px;
+            border-left: 5px solid #3b82f6;
+            padding-left: 20px;
+            opacity: 0.9;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
+        .card {
+            background: white;
+            border-radius: 32px;
+            padding: 30px;
+            box-shadow: 0 20px 30px -10px rgba(0, 30, 50, 0.15);
+            transition: transform 0.25s ease, box-shadow 0.25s;
+            border: 1px solid rgba(255, 255, 255, 0.8);
+        }
+
+        .card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 30px 40px -12px rgba(0, 40, 70, 0.25);
+        }
+
+        .card h2 {
+            font-size: 2rem;
+            font-weight: 600;
+            color: #1e293b;
+            margin-bottom: 25px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .card h2 i {
+            font-size: 2.2rem;
+            background: #eef2f6;
+            width: 50px;
+            height: 50px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 20px;
+        }
+
+        .upload-zone {
+            border: 2px dashed #b8c9dd;
+            border-radius: 28px;
+            padding: 35px 20px;
+            text-align: center;
+            background: #f9fcff;
+            cursor: pointer;
+            transition: border 0.2s, background 0.2s;
+            margin-bottom: 20px;
+        }
+
+        .upload-zone:hover {
+            border-color: #3b82f6;
+            background: #f0f7ff;
+        }
+
+        .upload-zone input {
+            display: none;
+        }
+
+        .upload-zone label {
+            display: block;
+            font-size: 1.2rem;
+            color: #1e2a3a;
+            cursor: pointer;
+        }
+
+        .upload-zone span {
+            font-size: 4rem;
+            display: block;
+            margin-bottom: 15px;
+        }
+
+        .btn {
+            background: #1e2a3a;
+            color: white;
+            border: none;
+            padding: 14px 32px;
+            border-radius: 60px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            box-shadow: 0 6px 14px rgba(0, 30, 50, 0.15);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .btn:hover {
+            background: #2d3f54;
+            transform: scale(1.02);
+            box-shadow: 0 10px 20px rgba(0, 40, 70, 0.25);
+        }
+
+        .btn-secondary {
+            background: #3b82f6;
+        }
+
+        .btn-secondary:hover {
+            background: #2563eb;
+        }
+
+        .status {
+            margin-top: 15px;
+            font-weight: 500;
+            padding: 10px 15px;
+            border-radius: 60px;
+            background: #f0f4fa;
+            color: #1e2a3a;
+            text-align: center;
+        }
+
+        .id-box {
+            background: #edf2f7;
+            border-radius: 60px;
+            padding: 14px 22px;
+            margin: 20px 0 8px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border: 1px solid #cbd5e1;
+            font-family: 'Inter', monospace;
+            font-size: 1.4rem;
+            word-break: break-all;
+        }
+
+        .copy-btn {
+            background: transparent;
+            border: none;
+            font-size: 1.8rem;
+            cursor: pointer;
+            color: #3b82f6;
+            transition: color 0.2s;
+            padding: 0 5px;
+        }
+
+        .copy-btn:hover {
+            color: #1e40af;
+        }
+
+        .search-area {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .search-area input {
+            flex: 1;
+            padding: 16px 22px;
+            border: 1px solid #cfdeed;
+            border-radius: 60px;
+            font-size: 1.1rem;
+            outline: none;
+            background: white;
+            transition: 0.2s;
+        }
+
+        .search-area input:focus {
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 3px rgba(59,130,246,0.2);
+        }
+
+        .result-box {
+            background: #f0f7ff;
+            border-radius: 28px;
+            padding: 25px;
+            text-align: center;
+            border: 1px solid #bdd3f0;
+            display: none;
+        }
+
+        .result-box img {
+            max-width: 100%;
+            max-height: 350px;
+            border-radius: 24px;
+            box-shadow: 0 15px 30px -10px rgba(0,0,0,0.2);
+            margin-bottom: 20px;
+            cursor: pointer;
+            transition: opacity 0.2s;
+        }
+
+        .result-box img:hover {
+            opacity: 0.95;
+        }
+
+        .actions {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .download-link {
+            background: #10b981;
+            color: white;
+            padding: 14px 28px;
+            border-radius: 60px;
+            text-decoration: none;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: background 0.2s;
+        }
+
+        .download-link:hover {
+            background: #059669;
+        }
+
+        .fullscreen-btn {
+            background: #8b5cf6;
+        }
+
+        .footer {
+            margin-top: 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 20px;
+            border-top: 1px solid rgba(0,0,0,0.08);
+            color: #334155;
+            font-size: 1rem;
+        }
+
+        .authors {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .telegram-badge {
+            background: #0088cc;
+            color: white;
+            padding: 8px 20px;
+            border-radius: 40px;
+            text-decoration: none;
+            font-weight: 500;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: 0.2s;
+        }
+
+        .telegram-badge:hover {
+            background: #0077b3;
+        }
+
+        .loader {
+            border: 4px solid #e2e8f0;
+            border-top: 4px solid #3b82f6;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 15px auto;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* ===== МОБИЛЬНАЯ АДАПТАЦИЯ (дополнительные улучшения) ===== */
+        @media (max-width: 700px) {
+            .grid {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+            h1 {
+                font-size: 2.8rem;
+            }
+            .glass-card {
+                padding: 25px;
+                border-radius: 32px;
+            }
+        }
+
+        @media (max-width: 600px) {
+            .glass-card {
+                padding: 20px;
+                border-radius: 28px;
+            }
+            h1 {
+                font-size: 2.5rem;
+            }
+            .subhead {
+                font-size: 1.1rem;
+                margin-bottom: 25px;
+            }
+            .card {
+                padding: 20px;
+                border-radius: 24px;
+            }
+            .card h2 {
+                font-size: 1.6rem;
+                margin-bottom: 20px;
+            }
+            .card h2 i {
+                width: 40px;
+                height: 40px;
+                font-size: 1.8rem;
+            }
+            .upload-zone {
+                padding: 25px 15px;
+            }
+            .upload-zone span {
+                font-size: 3rem;
+            }
+            .upload-zone label {
+                font-size: 1rem;
+            }
+            .btn {
+                width: 100%;
+                padding: 14px 20px;
+                font-size: 1rem;
+            }
+            .search-area {
+                flex-direction: column;
+                gap: 10px;
+            }
+            .search-area input,
+            .search-area button {
+                width: 100%;
+            }
+            .id-box {
+                font-size: 1rem;
+                padding: 12px 16px;
+            }
+            .copy-btn {
+                font-size: 1.5rem;
+            }
+            .result-box {
+                padding: 15px;
+            }
+            .result-box img {
+                max-height: 250px;
+            }
+            .actions {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            .actions .btn,
+            .actions .download-link {
+                width: 100%;
+                margin: 5px 0;
+                justify-content: center;
+            }
+            .footer {
+                flex-direction: column;
+                gap: 15px;
+                text-align: center;
+            }
+            .authors {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="glass-card">
+        <h1>⚡ EliteIMG</h1>
+        <div class="subhead">Загрузи — получи цифровой ID — покажи друзьям</div>
+
+        <div class="grid">
+            <!-- Загрузка -->
+            <div class="card">
+                <h2><i>📤</i> Загрузить</h2>
+                <div class="upload-zone" id="dropArea">
+                    <input type="file" id="imageInput" accept="image/*">
+                    <label for="imageInput">
+                        <span>📁</span>
+                        Нажми или перетащи фото
+                    </label>
+                </div>
+                <button class="btn" id="uploadBtn">Загрузить изображение</button>
+                <div id="uploadStatus" class="status" style="display: none;"></div>
+                <div id="progressContainer" style="display: none;">
+                    <div class="loader"></div>
+                </div>
+                <div id="generatedIdContainer" style="display: none;">
+                    <div class="id-box">
+                        <span id="generatedId"></span>
+                        <button class="copy-btn" id="copyIdBtn" title="Копировать ID">📋</button>
+                    </div>
+                    <div style="font-size: 0.9rem; color: #4b5563;">ID скопируется в буфер</div>
+                </div>
+            </div>
+
+            <!-- Поиск -->
+            <div class="card">
+                <h2><i>🔍</i> Найти</h2>
+                <div class="search-area">
+                    <input type="text" id="searchId" placeholder="Введите цифровой ID" inputmode="numeric">
+                    <button class="btn btn-secondary" id="searchBtn">Найти</button>
+                </div>
+                <div id="searchStatus" class="status" style="display: none;"></div>
+                <div id="searchResult" class="result-box"></div>
+            </div>
+        </div>
+
+        <footer class="footer">
+            <div class="authors">
+                <span>✍️ Авторы:</span>
+                <a href="https://t.me/MuXHelper" target="_blank" class="telegram-badge">
+                    <span>📱</span> @MuXHelper
+                </a>
+            </div>
+            <div style="color: #6b7280; font-size: 0.9rem;">
+                © 2026 EliteIMG
+            </div>
+        </footer>
+    </div>
+
+    <!-- Firebase SDK (скрыто) -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-database-compat.js"></script>
+
+    <script>
+        (function() {
+            // --- Инициализация Firebase ---
+            firebase.initializeApp({
+                apiKey: "AIzaSyCp-piAFunR8ARXVrq31YpjBUF-tjFNjLs",
+                databaseURL: "https://muxgame-37823-default-rtdb.firebaseio.com"
+            });
+            const db = firebase.database();
+
+            // --- API ключ ImgBB (вставьте свой) ---
+            const IMGBB_API_KEY = "ebe9599d65539fede25ba0a6adb97513"; // Получить на imgbb.com
+
+            // --- Элементы DOM ---
+            const imageInput = document.getElementById('imageInput');
+            const uploadBtn = document.getElementById('uploadBtn');
+            const uploadStatus = document.getElementById('uploadStatus');
+            const progressContainer = document.getElementById('progressContainer');
+            const generatedIdContainer = document.getElementById('generatedIdContainer');
+            const generatedIdSpan = document.getElementById('generatedId');
+            const copyIdBtn = document.getElementById('copyIdBtn');
+            const searchId = document.getElementById('searchId');
+            const searchBtn = document.getElementById('searchBtn');
+            const searchStatus = document.getElementById('searchStatus');
+            const searchResultDiv = document.getElementById('searchResult');
+            const dropArea = document.getElementById('dropArea');
+
+            // --- Генерация только цифрового ID (6-8 цифр) ---
+            function generateNumericId() {
+                const length = Math.floor(Math.random() * 3) + 6; // 6,7,8
+                let id = '';
+                for (let i = 0; i < length; i++) {
+                    id += Math.floor(Math.random() * 10).toString();
+                }
+                // Добавим миллисекунды в конец для уникальности (2-3 цифры)
+                id += Date.now().toString().slice(-3);
+                return id;
+            }
+
+            // --- Копирование в буфер ---
+            function copyToClipboard(text) {
+                navigator.clipboard.writeText(text).then(() => {
+                    alert('ID скопирован: ' + text);
+                }).catch(() => {
+                    const textarea = document.createElement('textarea');
+                    textarea.value = text;
+                    document.body.appendChild(textarea);
+                    textarea.select();
+                    document.execCommand('copy');
+                    document.body.removeChild(textarea);
+                    alert('ID скопирован');
+                });
+            }
+
+            // --- Загрузка изображения (через ImgBB) ---
+            uploadBtn.addEventListener('click', function() {
+                const file = imageInput.files[0];
+                if (!file) {
+                    showStatus(uploadStatus, '❌ Выберите файл.', '#b91c1c');
+                    return;
+                }
+                if (!file.type.startsWith('image/')) {
+                    showStatus(uploadStatus, '❌ Нужно изображение.', '#b91c1c');
+                    return;
+                }
+
+                showStatus(uploadStatus, '⏳ Загрузка...', '#1e2a3a');
+                progressContainer.style.display = 'block';
+                generatedIdContainer.style.display = 'none';
+
+                const formData = new FormData();
+                formData.append('key', IMGBB_API_KEY);
+                formData.append('image', file);
+
+                fetch('https://api.imgbb.com/1/upload', {
+                    method: 'POST',
+                    body: formData
+                })
+                .then(response => response.json())
+                .then(data => {
+                    progressContainer.style.display = 'none';
+                    if (data.success) {
+                        const imageUrl = data.data.url;
+                        const id = generateNumericId();
+
+                        // Сохраняем в Firebase
+                        db.ref('images/' + id).set(imageUrl)
+                            .then(() => {
+                                showStatus(uploadStatus, '✅ Готово!', '#15803d');
+                                generatedIdSpan.textContent = id;
+                                generatedIdContainer.style.display = 'block';
+                                imageInput.value = '';
+                                searchId.value = id;
+                            })
+                            .catch(error => {
+                                showStatus(uploadStatus, '❌ Ошибка сохранения.', '#b91c1c');
+                                console.error(error);
+                            });
+                    } else {
+                        showStatus(uploadStatus, '❌ Ошибка сервера.', '#b91c1c');
+                    }
+                })
+                .catch(error => {
+                    progressContainer.style.display = 'none';
+                    showStatus(uploadStatus, '❌ Проблема с сетью.', '#b91c1c');
+                });
+            });
+
+            // --- Копирование ID ---
+            copyIdBtn.addEventListener('click', function() {
+                const id = generatedIdSpan.textContent;
+                if (id) copyToClipboard(id);
+            });
+
+            // --- Поиск изображения по ID ---
+            function performSearch() {
+                const id = searchId.value.trim();
+                if (!id) {
+                    showStatus(searchStatus, '⚠️ Введите ID.', '#b45309');
+                    searchResultDiv.style.display = 'none';
+                    return;
+                }
+                // Разрешены только цифры
+                if (!/^\d+$/.test(id)) {
+                    showStatus(searchStatus, '⚠️ ID должен состоять только из цифр.', '#b45309');
+                    searchResultDiv.style.display = 'none';
+                    return;
+                }
+
+                showStatus(searchStatus, '🔍 Поиск...', '#1e2a3a');
+                searchResultDiv.style.display = 'none';
+
+                db.ref('images/' + id).once('value')
+                    .then(snapshot => {
+                        const url = snapshot.val();
+                        if (!url) {
+                            showStatus(searchStatus, '❌ Изображение не найдено.', '#b91c1c');
+                            return;
+                        }
+
+                        showStatus(searchStatus, '✅ Изображение найдено', '#15803d');
+                        searchResultDiv.style.display = 'block';
+                        searchResultDiv.innerHTML = '';
+
+                        const img = document.createElement('img');
+                        img.src = url;
+                        img.alt = 'ID: ' + id;
+                        img.title = 'Нажми для полноэкранного режима';
+                        img.addEventListener('click', () => {
+                            if (img.requestFullscreen) img.requestFullscreen();
+                        });
+
+                        const actions = document.createElement('div');
+                        actions.className = 'actions';
+
+                        const downloadLink = document.createElement('a');
+                        downloadLink.href = url;
+                        downloadLink.download = `EliteIMG_${id}.jpg`;
+                        downloadLink.className = 'download-link';
+                        downloadLink.innerHTML = '⬇️ Скачать';
+
+                        const fullBtn = document.createElement('button');
+                        fullBtn.textContent = '🖥️ Полный экран';
+                        fullBtn.className = 'btn fullscreen-btn';
+                        fullBtn.addEventListener('click', () => {
+                            if (img.requestFullscreen) img.requestFullscreen();
+                        });
+
+                        const copyFoundBtn = document.createElement('button');
+                        copyFoundBtn.textContent = '📋 Копировать ID';
+                        copyFoundBtn.className = 'btn btn-secondary';
+                        copyFoundBtn.addEventListener('click', () => copyToClipboard(id));
+
+                        actions.appendChild(downloadLink);
+                        actions.appendChild(fullBtn);
+                        actions.appendChild(copyFoundBtn);
+
+                        searchResultDiv.appendChild(img);
+                        searchResultDiv.appendChild(actions);
+                    })
+                    .catch(error => {
+                        showStatus(searchStatus, '❌ Ошибка доступа к базе.', '#b91c1c');
+                    });
+            }
+
+            function showStatus(element, message, color) {
+                element.textContent = message;
+                element.style.backgroundColor = color + '15';
+                element.style.color = color;
+                element.style.display = 'block';
+            }
+
+            searchBtn.addEventListener('click', performSearch);
+            searchId.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') performSearch();
+            });
+
+            // --- Drag & Drop ---
+            dropArea.addEventListener('click', () => imageInput.click());
+
+            dropArea.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                dropArea.style.borderColor = '#3b82f6';
+                dropArea.style.background = '#f0f7ff';
+            });
+
+            dropArea.addEventListener('dragleave', () => {
+                dropArea.style.borderColor = '#b8c9dd';
+                dropArea.style.background = '#f9fcff';
+            });
+
+            dropArea.addEventListener('drop', (e) => {
+                e.preventDefault();
+                dropArea.style.borderColor = '#b8c9dd';
+                dropArea.style.background = '#f9fcff';
+                const file = e.dataTransfer.files[0];
+                if (file && file.type.startsWith('image/')) {
+                    imageInput.files = e.dataTransfer.files;
+                    uploadStatus.textContent = `📎 Выбран: ${file.name}`;
+                    uploadStatus.style.display = 'block';
+                    uploadStatus.style.color = '#1e2a3a';
+                    uploadStatus.style.backgroundColor = '#f0f4fa';
+                } else {
+                    showStatus(uploadStatus, '❌ Перетащите изображение.', '#b91c1c');
+                }
+            });
+
+            document.addEventListener('dragover', (e) => e.preventDefault());
+            document.addEventListener('drop', (e) => e.preventDefault());
+        })();
+    </script>
+</body>
+              </html>
